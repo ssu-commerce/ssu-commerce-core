@@ -1,4 +1,4 @@
-# Repository Quick Start template
+# Ssu Commerce Core
 ## Index
   - [Overview](#overview) 
   - [Getting Started](#getting-started)
@@ -9,7 +9,7 @@
   - [Deployment](#deployment)
   - [Used or Referenced Projects](Used-or-Referenced-Projects)
 -->
-## About RepositoryTemplate
+## SSU Commerce의 베이스 라이브러리
 <!--Wirte one paragraph of project description -->  
 This project's purpose is to create a make Repository with a collection of default settings  
 
