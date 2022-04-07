@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "Build Test" ]
+    types: [ completed ]
     branches: [ release ]
 
 jobs:
@@ -17,6 +19,16 @@ jobs:
         with:
           java-version: 11
 
+      - name: Cache gradle modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Set Current Time
         uses: 1466587594/get-current-time@v1
         id: current-time
@@ -27,9 +39,6 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build
 
       - name: Publish
         env:
