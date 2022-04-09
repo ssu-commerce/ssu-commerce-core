@@ -8,6 +8,7 @@ import io.jsonwebtoken.io.DecodingException
 import io.jsonwebtoken.security.SignatureException
 import org.springframework.http.MediaType
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.GenericFilterBean
 import java.io.IOException
 import javax.servlet.FilterChain
@@ -17,6 +18,7 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Component
 class JwtAuthenticationFilter(
     private val jwtTokenProvider: JwtTokenProvider,
     private val objectMapper: ObjectMapper
