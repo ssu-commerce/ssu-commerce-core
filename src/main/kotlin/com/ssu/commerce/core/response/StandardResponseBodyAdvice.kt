@@ -37,12 +37,11 @@ private fun SsuCommerceException.setStatusAndReturn(response: ServerHttpResponse
     return ErrorResponse(this)
 }
 
-class ErrorResponse(error: SsuCommerceException) {
+data class ErrorResponse(val message: String) {
     // ToDo에러코드 정책을 어떻게 할지 논의해봐야함.
     // val errorCode = error.errorCode
-    val message = error.message
+    constructor(error: SsuCommerceException) : this(error.message)
 }
-
 class PageResponse<T>(page: Page<T>) {
     val contents = page.content
     val page: PageInfo = PageInfo(page.size, page.totalElements, page.totalPages, page.number)
