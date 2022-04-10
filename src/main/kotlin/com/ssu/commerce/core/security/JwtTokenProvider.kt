@@ -5,33 +5,21 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.DecodingException
 import io.jsonwebtoken.security.Keys
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
-import java.util.Date
+import java.util.*
 import javax.crypto.SecretKey
 import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtTokenProvider(
-    @Value("\${jwt.secret}") private val jwtSecret: String,
-//    @Value("\${app.jwt.accessTokenValidMS}") private val accessTokenValidMilSecond: Long = 0,
-//    @Value("\${app.jwt.refreshTokenValidMS}") private val refreshTokenValidMilSecond: Long = 0
+    private val jwtProviderProperties: JwtProviderProperties
 ) {
 
-    private val secretKey: SecretKey = Keys.hmacShaKeyFor(jwtSecret.toByteArray())
-
-    // TODO 이건 인증서버 롤인듯?
-//    fun generateAccessToken(userId: String, roles: Set<UserRole>): JwtTokenDto {
-//        return generateToken(userId, roles, accessTokenValidMilSecond)
-//    }
-//
-//    fun generateRefreshToken(userId: String, roles: Set<UserRole>): JwtTokenDto {
-//        return generateToken(userId, roles, refreshTokenValidMilSecond)
-//    }
+    private val secretKey: SecretKey = Keys.hmacShaKeyFor(jwtProviderProperties.secret.toByteArray())
 
     fun generateToken(userId: String, roles: Set<UserRole>, tokenValidMilSecond: Long): JwtTokenDto {
         val expiredIn = Date().time + tokenValidMilSecond
