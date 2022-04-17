@@ -40,21 +40,26 @@ configurations {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
-//
-// tasks {
-//    jar {
-//        enabled = true
-//    }
-//    bootJar {
-//        enabled = false
-//    }
-// }
+
+tasks {
+    jar {
+        enabled = true
+    }
+    bootJar {
+        enabled = false
+    }
+}
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
     }
+}
+
+val sourcesJar by tasks.registering(Jar::class) {
+    classifier = "sources"
+    from(sourceSets.main.get().allSource)
 }
 
 tasks.withType<Test> {
@@ -75,6 +80,7 @@ publishing {
     publications {
         register<MavenPublication>("gpr") {
             from(components["java"])
+            artifact(sourcesJar.get())
         }
     }
 }
