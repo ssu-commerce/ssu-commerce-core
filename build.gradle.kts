@@ -41,14 +41,14 @@ configurations {
     }
 }
 //
-//tasks {
+// tasks {
 //    jar {
 //        enabled = true
 //    }
 //    bootJar {
 //        enabled = false
 //    }
-//}
+// }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
