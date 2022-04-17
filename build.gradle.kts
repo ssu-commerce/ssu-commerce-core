@@ -48,22 +48,11 @@ tasks {
     bootJar {
         enabled = false
     }
-    val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allSource)
-    }
+}
 
-    val javadocJar by creating(Jar::class) {
-        dependsOn.add(javadoc)
-        archiveClassifier.set("javadoc")
-        from(javadoc)
-    }
-
-    artifacts {
-        archives(sourcesJar)
-        archives(javadocJar)
-        archives(jar)
-    }
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
 }
 
 tasks.withType<KotlinCompile> {
@@ -91,6 +80,7 @@ publishing {
     publications {
         register<MavenPublication>("gpr") {
             from(components["java"])
+            artifact(sourcesJar)
         }
     }
 }
