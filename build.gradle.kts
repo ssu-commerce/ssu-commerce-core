@@ -40,15 +40,15 @@ configurations {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
-
-tasks {
-    jar {
-        enabled = true
-    }
-    bootJar {
-        enabled = false
-    }
-}
+//
+//tasks {
+//    jar {
+//        enabled = true
+//    }
+//    bootJar {
+//        enabled = false
+//    }
+//}
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
