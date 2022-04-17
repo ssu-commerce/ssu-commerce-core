@@ -44,6 +44,7 @@ configurations {
 tasks {
     jar {
         enabled = true
+        archiveFileName.set("ssu-commerce-core.jar")
     }
     bootJar {
         enabled = false
