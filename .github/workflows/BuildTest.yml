@@ -33,4 +33,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
+        env:
+          USERNAME: ${{secrets.USERNAME}}
+          TOKEN: ${{secrets.TOKEN}}
         run: ./gradlew build
