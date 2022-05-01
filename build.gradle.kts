@@ -15,13 +15,28 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
+        credentials {
+            username = findUserName()
+            password = findToken()
+        }
+    }
 }
 
+fun findUserName() = (project.findProperty("gpr.user") as String?).nullWhenEmpty() ?: System.getenv("USERNAME")
+fun findToken() = (project.findProperty("gpr.key") as String?).nullWhenEmpty() ?: System.getenv("TOKEN")
+
+fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this
+
 dependencies {
+    api("com.ssu.commerce:vault:beta-2022.05.6")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.h2database:h2")
+    runtimeOnly("mysql:mysql-connector-java")
     // Security
     api("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
@@ -73,8 +88,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+                username = findUserName()
+                password = findToken()
             }
         }
     }
