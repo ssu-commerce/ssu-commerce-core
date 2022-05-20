@@ -1,4 +1,4 @@
-package com.ssu.commerce.core
+package com.ssu.commerce.coretest
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
