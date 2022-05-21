@@ -26,4 +26,3 @@ open class BaseTimeEntity(
     val updatedAt: LocalDateTime?
         get() = _updatedAt
 }
-

@@ -38,7 +38,7 @@ internal class JpaConfigTest @Autowired constructor(val testRepository: TestEnti
         // given
         SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken("TEST", "")
 
-        //when
+        // when
         val savedEntity = testRepository.save(TestEntity("test name"))
 
         // then
@@ -53,5 +53,4 @@ internal class JpaConfigTest @Autowired constructor(val testRepository: TestEnti
                 assertThat(it.updatedAt).isNotNull
             }
     }
-
 }
