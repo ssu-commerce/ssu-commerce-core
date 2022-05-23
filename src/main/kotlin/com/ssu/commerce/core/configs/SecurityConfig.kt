@@ -11,8 +11,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 class SecurityConfig(
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
-) : WebSecurityConfigurerAdapter(), UrlPermission {
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+    private val urlPermission: UrlPermissionFilter
+) : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.httpBasic().disable()
             .csrf().disable()
@@ -20,19 +21,22 @@ class SecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .urlPermissions()
+            .apply { urlPermission.urlPermissions(this) }
             .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
     }
 
     override fun configure(web: WebSecurity) {
         web.ignoring().antMatchers(
+            "/swagger-ui.html",
             "/swagger-ui/**",
+            "/v3/api-docs/**"
         )
     }
 }
 
-interface UrlPermission {
-    fun ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry.urlPermissions(): ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry =
-        anyRequest().authenticated()
+interface UrlPermissionFilter {
+    fun urlPermissions(authorizeRequests: ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry): ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry =
+        authorizeRequests
+            .anyRequest().authenticated()
 }
