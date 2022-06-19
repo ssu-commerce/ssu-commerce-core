@@ -1,11 +1,9 @@
-package com.ssu.commerce.coretest
+package com.ssu.commerce.core
 
-import com.ssu.commerce.core.configs.EnableSsuCommerceCore
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-@EnableSsuCommerceCore
 class CoreApplication
 
 fun main(args: Array<String>) {
