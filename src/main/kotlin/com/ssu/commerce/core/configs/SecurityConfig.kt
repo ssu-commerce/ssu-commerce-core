@@ -40,3 +40,6 @@ interface UrlPermissionFilter {
         authorizeRequests
             .anyRequest().authenticated()
 }
+
+@Configuration
+class DefaultUrlPermissionFilter : UrlPermissionFilter

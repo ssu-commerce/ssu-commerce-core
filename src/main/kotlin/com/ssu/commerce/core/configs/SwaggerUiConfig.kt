@@ -7,23 +7,27 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springdoc.core.GroupedOpenApi
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 
 @Component
+@EnableConfigurationProperties
 class SwaggerUiConfig(
-    private val swaggerconfig: SwaggerDocsConfig
+    @Value("\${springdoc.swagger-ui.base-package}") private val basePackage: String,
+    @Value("\${springdoc.swagger-ui.title}") private val title: String,
+    @Value("\${springdoc.swagger-ui.version}") private val version: String
 ) {
     @Bean
     fun usersGroup(): GroupedOpenApi =
-        GroupedOpenApi.builder().group(swaggerconfig.title)
-            .addOperationCustomizer { operation: Operation, handlerMethod: HandlerMethod? ->
+        GroupedOpenApi.builder().group(title)
+            .addOperationCustomizer { operation: Operation, _: HandlerMethod? ->
                 operation.addSecurityItem(SecurityRequirement().addList("bearer-key"))
-                operation
             }
-            .addOpenApiCustomiser { openApi: OpenAPI -> openApi.info(Info().title("${swaggerconfig.title} API").version(swaggerconfig.version)) }
-            .packagesToScan(swaggerconfig.basePackage)
+            .addOpenApiCustomiser { openApi: OpenAPI -> openApi.info(Info().title("$title API").version(version)) }
+            .packagesToScan(basePackage)
             .build()
 
     @Bean
@@ -34,10 +38,4 @@ class SwaggerUiConfig(
                 SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
             )
         )
-}
-
-interface SwaggerDocsConfig {
-    val basePackage: String
-    val title: String
-    val version: String
 }
