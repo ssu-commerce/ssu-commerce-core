@@ -1,0 +1,6 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    base-package: "com.ssu.commerce"
+    title: Core
+    version: 0.0.0
