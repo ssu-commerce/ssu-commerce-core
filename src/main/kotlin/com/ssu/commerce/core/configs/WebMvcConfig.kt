@@ -13,7 +13,10 @@ class WebMvcConfig(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
+            .allowedOrigins(
+                "http://localhost:3000",
+                "https://ssu-commerce.github.io"
+            )
             .allowedMethods("*")
     }
 

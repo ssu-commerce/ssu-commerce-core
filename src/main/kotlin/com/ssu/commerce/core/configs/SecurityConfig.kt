@@ -17,7 +17,7 @@ class SecurityConfig(
     override fun configure(http: HttpSecurity) {
         http.httpBasic().disable()
             .csrf().disable()
-            .cors().disable()
+            .cors().and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
