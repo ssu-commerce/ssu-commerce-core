@@ -3,12 +3,13 @@ package com.ssu.commerce.core.client.api
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationStartedEvent
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import java.time.Instant
-import java.time.LocalDate.now
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+@Profile("!test")
 @Configuration
 class ServerSessionTokenInitializer(
     private val authApiClient: AuthApiClient
