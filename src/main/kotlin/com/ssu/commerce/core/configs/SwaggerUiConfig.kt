@@ -18,7 +18,6 @@ import org.springframework.web.method.HandlerMethod
 class SwaggerUiConfig(
     @Value("\${springdoc.swagger-ui.base-package}") private val basePackage: String,
     @Value("\${springdoc.swagger-ui.title}") private val title: String,
-    @Value("\${springdoc.swagger-ui.version}") private val version: String
 ) {
     @Bean
     fun usersGroup(): GroupedOpenApi =
@@ -26,7 +25,7 @@ class SwaggerUiConfig(
             .addOperationCustomizer { operation: Operation, _: HandlerMethod? ->
                 operation.addSecurityItem(SecurityRequirement().addList("bearer-key"))
             }
-            .addOpenApiCustomiser { openApi: OpenAPI -> openApi.info(Info().title("$title API").version(version)) }
+            .addOpenApiCustomiser { openApi: OpenAPI -> openApi.info(Info().title("$title API").version("0.0.0")) }
             .packagesToScan(basePackage)
             .build()
 

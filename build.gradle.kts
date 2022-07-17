@@ -52,6 +52,9 @@ dependencies {
 
     // Document
     api("org.springdoc:springdoc-openapi-ui:1.6.8")
+
+    // HTTP
+    api("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.3")
 }
 
 configurations {
