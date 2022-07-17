@@ -1,6 +1,5 @@
 package com.ssu.commerce.core.client.api
 
-import feign.RequestInterceptor
 import feign.Response
 import feign.codec.ErrorDecoder
 import org.springframework.context.annotation.Bean
@@ -16,18 +15,8 @@ import org.springframework.vault.annotation.VaultPropertySources
     )
 )
 class FeignCustomSettings {
-
     @Bean
-    fun requestInterceptor(): RequestInterceptor =
-        RequestInterceptor {
-            if (it.url().equals("/sign-in")) return@RequestInterceptor
-
-            it.header("Authorization", "Bearer ${ServerSessionTokenInitializer.getAccessToken()}")
-        }
-
-    @Bean
-    fun errorDecoder(): ErrorDecoder =
-        SsuCommerceFeignErrorDecoder()
+    fun errorDecoder(): ErrorDecoder = SsuCommerceFeignErrorDecoder()
 }
 
 class SsuCommerceFeignErrorDecoder : ErrorDecoder {

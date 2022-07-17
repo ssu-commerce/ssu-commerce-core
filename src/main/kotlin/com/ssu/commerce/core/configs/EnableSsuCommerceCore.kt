@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
@@ -16,4 +17,5 @@ annotation class EnableSsuCommerceCore
 @OpenAPIDefinition(servers = [Server(url = "/")])
 @ComponentScan(basePackages = ["com.ssu.commerce.core"])
 @EnableFeignClients
+@EnableScheduling
 class EnableSsuCommerceCoreConfiguration
