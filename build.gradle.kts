@@ -32,7 +32,7 @@ fun findToken() = (project.findProperty("gpr.key") as String?).nullWhenEmpty() ?
 fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this
 
 dependencies {
-    api("com.ssu.commerce:vault:beta-2023.07.9")
+    api("com.ssu.commerce:vault:2023.07.2")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
