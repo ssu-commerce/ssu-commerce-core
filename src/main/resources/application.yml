@@ -3,4 +3,16 @@ springdoc:
     path: /swagger-ui.html
     base-package: "com.ssu.commerce"
     title: Core
-    version: 0.0.0
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: BASIC
+
+logging.level.com.ssu.commerce.core.client.api: DEBUG
