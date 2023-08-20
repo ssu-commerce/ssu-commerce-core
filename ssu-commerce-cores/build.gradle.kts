@@ -14,6 +14,29 @@ group = "com.ssu.commerce"
 version = System.getenv("VERSION")
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+fun findUserName() = (project.findProperty("gpr.user") as String?).nullWhenEmpty() ?: System.getenv("USERNAME")
+fun findToken() = (project.findProperty("gpr.key") as String?).nullWhenEmpty() ?: System.getenv("TOKEN")
+
+fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this
+
+subprojects {
+    apply(plugin = "maven-publish")
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
+            credentials {
+                username = findUserName()
+                password = findToken()
+            }
+        }
+    }
+
+    dependencies {
+    }
+}
 repositories {
     mavenCentral()
     maven {
@@ -24,34 +47,6 @@ repositories {
             password = findToken()
         }
     }
-}
-
-fun findUserName() = (project.findProperty("gpr.user") as String?).nullWhenEmpty() ?: System.getenv("USERNAME")
-fun findToken() = (project.findProperty("gpr.key") as String?).nullWhenEmpty() ?: System.getenv("TOKEN")
-
-fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this
-
-dependencies {
-    api("com.ssu.commerce:vault:2023.07.2")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    api("org.springframework.boot:spring-boot-starter-web")
-    api("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("com.h2database:h2")
-    runtimeOnly("mysql:mysql-connector-java")
-    // Security
-    api("org.springframework.boot:spring-boot-starter-security")
-    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
-    implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
-
-    api("com.fasterxml.jackson.module:jackson-module-kotlin")
-    api("org.jetbrains.kotlin:kotlin-reflect")
-    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-    // Document
-    api("org.springdoc:springdoc-openapi-ui:1.6.8")
 }
 
 configurations {
@@ -99,7 +94,6 @@ publishing {
     }
     publications {
         register<MavenPublication>("gpr") {
-            artifactId = "core"
             from(components["java"])
             artifact(sourcesJar)
         }
