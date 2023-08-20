@@ -6,7 +6,7 @@ on:
     types: [ completed ]
     branches: [ main ]
     paths:
-      - 'ssu-commerce-tools/***'
+      - 'ssu-commerce-tools/**'
 
 jobs:
   build:
