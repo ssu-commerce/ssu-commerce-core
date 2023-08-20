@@ -99,6 +99,7 @@ publishing {
     }
     publications {
         register<MavenPublication>("gpr") {
+            artifactId = "core"
             from(components["java"])
             artifact(sourcesJar)
         }
