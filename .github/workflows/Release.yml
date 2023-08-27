@@ -5,6 +5,8 @@ on:
     workflows: [ "Build Test" ]
     types: [ completed ]
     branches: [ release ]
+    paths:
+      - 'ssu-commerce-cores/**'
 
 jobs:
   build:
@@ -46,4 +48,4 @@ jobs:
           VERSION: "${{ steps.current-time.outputs.formattedTime }}.${{github.run_number}}"
           USERNAME: ${{secrets.USERNAME}}
           TOKEN: ${{secrets.TOKEN}}
-        run: ./gradlew publish
+        run: ./gradlew :ssu-commerce-cores publish

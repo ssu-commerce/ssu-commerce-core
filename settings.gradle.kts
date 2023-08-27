@@ -24,5 +24,14 @@ pluginManagement {
 }
 rootProject.name = "ssu-commerce-core"
 
-include("core")
-include("plugin")
+include(
+    "ssu-commerce-cores",
+    "ssu-commerce-cores:ssu-commerce-core-web",
+    "ssu-commerce-cores:ssu-commerce-core-security",
+    "ssu-commerce-cores:ssu-commerce-core-jpa"
+)
+
+include(
+    "ssu-commerce-tools",
+    "ssu-commerce-tools:ssu-commerce-gradle-plugin"
+)

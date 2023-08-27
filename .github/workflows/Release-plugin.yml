@@ -1,19 +1,18 @@
-name: Release On Beta
+name: Release
 
 on:
   workflow_run:
     workflows: [ "Build Test" ]
     types: [ completed ]
-    branches: [ main ]
+    branches: [ release ]
     paths:
-      - 'ssu-commerce-cores/**'
+      - 'ssu-commerce-tools/**'
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
 
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +45,7 @@ jobs:
 
       - name: Publish
         env:
-          VERSION: "beta-${{ steps.current-time.outputs.formattedTime }}.${{github.run_number}}"
+          VERSION: "${{ steps.current-time.outputs.formattedTime }}.${{github.run_number}}"
           USERNAME: ${{secrets.USERNAME}}
           TOKEN: ${{secrets.TOKEN}}
-        run: ./gradlew :ssu-commerce-cores publish
+        run: ./gradlew :ssu-commerce-tools publish
