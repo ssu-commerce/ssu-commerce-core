@@ -5,7 +5,6 @@ plugins {
 }
 
 group = "com.ssu.commerce.plugin"
-version = System.getenv("VERSION")
 
 repositories {
     mavenCentral()
