@@ -37,6 +37,15 @@ publishing {
 
 gradlePlugin {
     plugins {
+        create("github-registry"){
+            id = "com.ssu.commerce.plugin.github-registry"
+            displayName = "ssu-commerce github registry plugin"
+            description = "github registry settings for ssu-commerce project"
+            implementationClass = "com.ssu.commerce.plugins.registry.GithubRegistryPlugin"
+        }
+    }
+
+    plugins {
         create("maven-publish"){
             id = "com.ssu.commerce.plugin.maven-publish"
             displayName = "ssu-commerce maven publish plugin"
