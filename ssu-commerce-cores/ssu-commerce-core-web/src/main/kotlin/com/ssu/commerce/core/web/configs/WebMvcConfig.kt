@@ -15,8 +15,4 @@ class WebMvcConfig : WebMvcConfigurer {
             )
             .allowedMethods("*")
     }
-
-    // override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
-    //     resolvers.add(userInfoArgumentResolver)
-    // }
 }

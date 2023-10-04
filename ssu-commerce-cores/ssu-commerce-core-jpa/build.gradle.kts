@@ -8,7 +8,6 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-security")
 
     // Document
     api("org.springdoc:springdoc-openapi-ui:1.6.8")
