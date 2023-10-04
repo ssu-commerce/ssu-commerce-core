@@ -1,3 +1,3 @@
-allprojects{
+allprojects {
     version = System.getenv("VERSION")
 }
