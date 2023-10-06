@@ -28,7 +28,8 @@ include(
     "ssu-commerce-cores",
     "ssu-commerce-cores:ssu-commerce-core-web",
     "ssu-commerce-cores:ssu-commerce-core-security",
-    "ssu-commerce-cores:ssu-commerce-core-jpa"
+    "ssu-commerce-cores:ssu-commerce-core-jpa",
+    "ssu-commerce-cores:ssu-commerce-core-test"
 )
 
 include(

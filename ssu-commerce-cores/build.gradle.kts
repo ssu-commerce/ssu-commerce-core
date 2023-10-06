@@ -7,20 +7,26 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
-    kotlin("plugin.jpa") version "1.6.10"
 }
 
-group = "com.ssu.commerce"
-version = System.getenv("VERSION")
-java.sourceCompatibility = JavaVersion.VERSION_11
-
-fun findUserName() = (project.findProperty("gpr.user") as String?).nullWhenEmpty() ?: System.getenv("USERNAME")
-fun findToken() = (project.findProperty("gpr.key") as String?).nullWhenEmpty() ?: System.getenv("TOKEN")
-
-fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this
-
 subprojects {
+    apply(plugin = "kotlin")
+    apply(plugin = "kotlin-spring")
+    apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.springframework.boot")
     apply(plugin = "maven-publish")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+    dependencies {
+        api(project(":ssu-commerce-cores"))
+    }
+}
+
+allprojects {
+    apply(plugin = "org.springframework.boot")
+
+    group = "com.ssu.commerce"
+    java.sourceCompatibility = JavaVersion.VERSION_11
 
     repositories {
         mavenCentral()
@@ -34,68 +40,59 @@ subprojects {
         }
     }
 
-    dependencies {
-    }
-}
-repositories {
-    mavenCentral()
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
-        credentials {
-            username = findUserName()
-            password = findToken()
+    configurations {
+        compileOnly {
+            extendsFrom(configurations.annotationProcessor.get())
         }
     }
-}
 
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
-}
 
-tasks {
-    jar {
-        enabled = true
-        archiveClassifier.set("")
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "11"
+        }
     }
-    bootJar {
-        enabled = false
+
+    tasks {
+        jar {
+            enabled = true
+            archiveClassifier.set("")
+        }
+        bootJar {
+            enabled = false
+        }
     }
-}
 
-val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+    val sourcesJar by tasks.registering(Jar::class) {
+        archiveClassifier.set("sources")
+        from(sourceSets.main.get().allSource)
     }
-}
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
-            credentials {
-                username = findUserName()
-                password = findToken()
+    publishing {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
+                credentials {
+                    username = findUserName()
+                    password = findToken()
+                }
+            }
+        }
+        publications {
+            register<MavenPublication>("gpr") {
+                from(components["java"])
+                artifact(sourcesJar)
             }
         }
     }
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["java"])
-            artifact(sourcesJar)
-        }
-    }
 }
+
+fun findUserName() = (project.findProperty("gpr.user") as String?).nullWhenEmpty() ?: System.getenv("USERNAME")
+fun findToken() = (project.findProperty("gpr.key") as String?).nullWhenEmpty() ?: System.getenv("TOKEN")
+
+fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this

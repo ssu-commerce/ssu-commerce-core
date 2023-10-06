@@ -1,5 +1,7 @@
 package com.ssu.commerce.plugins.publish.maven
 
+import com.ssu.commerce.plugins.util.findToken
+import com.ssu.commerce.plugins.util.findUserName
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
@@ -18,10 +20,8 @@ class MavenPublishPlugin : Plugin<Project> {
                         name = "GithubPackages"
                         url = URI("https://maven.pkg.github.com/ssu-commerce/ssu-commerce-core")
                         credentials {
-                            username = (target.findProperty("gpr.user") as String?).nullWhenEmpty()
-                                ?: System.getenv("USERNAME")
-                            password =
-                                (target.findProperty("gpr.key") as String?).nullWhenEmpty() ?: System.getenv("TOKEN")
+                            username = target.findUserName()
+                            password = target.findToken()
                         }
                     }
 
@@ -41,5 +41,3 @@ class MavenPublishPlugin : Plugin<Project> {
             }
     }
 }
-
-fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this

@@ -5,7 +5,6 @@ plugins {
 }
 
 group = "com.ssu.commerce.plugin"
-version = System.getenv("VERSION")
 
 repositories {
     mavenCentral()
@@ -36,6 +35,15 @@ publishing {
 }
 
 gradlePlugin {
+    plugins {
+        create("github-registry"){
+            id = "com.ssu.commerce.plugin.github-registry"
+            displayName = "ssu-commerce github registry plugin"
+            description = "github registry settings for ssu-commerce project"
+            implementationClass = "com.ssu.commerce.plugins.registry.GithubRegistryPlugin"
+        }
+    }
+
     plugins {
         create("maven-publish"){
             id = "com.ssu.commerce.plugin.maven-publish"
