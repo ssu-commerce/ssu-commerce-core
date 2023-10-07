@@ -38,3 +38,8 @@ out/
 
 ### GITHUB ###
 gradle.properties
+ssu-commerce-cores/.tmp/
+ssu-commerce-cores/caches/
+ssu-commerce-cores/daemon/
+ssu-commerce-cores/kotlin-profile/
+ssu-commerce-cores/native/

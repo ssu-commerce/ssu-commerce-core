@@ -26,7 +26,12 @@ allprojects {
     apply(plugin = "org.springframework.boot")
 
     group = "com.ssu.commerce"
-    java.sourceCompatibility = JavaVersion.VERSION_11
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        withJavadocJar()
+        withSourcesJar()
+    }
 
     repositories {
         mavenCentral()
@@ -67,11 +72,6 @@ allprojects {
         }
     }
 
-    val sourcesJar by tasks.registering(Jar::class) {
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allSource)
-    }
-
     publishing {
         repositories {
             maven {
@@ -84,9 +84,8 @@ allprojects {
             }
         }
         publications {
-            register<MavenPublication>("gpr") {
+            create<MavenPublication>(project.name) {
                 from(components["java"])
-                artifact(sourcesJar)
             }
         }
     }
