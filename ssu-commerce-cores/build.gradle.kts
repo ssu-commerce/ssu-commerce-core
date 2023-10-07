@@ -89,6 +89,7 @@ allprojects {
             }
         }
     }
+    tasks.findByName("publish")?.doLast { println("\n$group:$name:$version upload Completed") }
 }
 
 fun findUserName() = (project.findProperty("gpr.user") as String?).nullWhenEmpty() ?: System.getenv("USERNAME")
