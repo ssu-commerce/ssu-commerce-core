@@ -18,7 +18,6 @@ fun String?.nullWhenEmpty() = if (this.isNullOrEmpty()) null else this
 
 dependencies {
     implementation("com.google.cloud.tools:jib-gradle-plugin:3.3.1")
-    api("com.fasterxml.jackson.core:jackson-databind:2.13.2")
 }
 
 publishing {
