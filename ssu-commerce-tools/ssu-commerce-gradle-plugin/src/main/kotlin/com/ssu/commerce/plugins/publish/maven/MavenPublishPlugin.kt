@@ -23,10 +23,6 @@ class MavenPublishPlugin : Plugin<Project> {
             withSourcesJar()
         }
 
-        target.tasks.withType(Jar::class.java) {
-            archiveClassifier.set("")
-        }
-
         target.extensions.getByType(PublishingExtension::class.java).apply {
             val repositoryName: String =
                 (target.findProperty("maven-repository-name") as String?).nullWhenEmpty() ?: "ssu-commerce-core"
