@@ -47,7 +47,7 @@ allprojects {
 
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
-        api("org.springframework.cloud:spring-cloud-starter-config:3.1.2")
+        api("com.ssu.commerce:ssu-commerce-config-client:config-client-test2")
     }
 
     configurations {
