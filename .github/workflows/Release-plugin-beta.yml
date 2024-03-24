@@ -1,12 +1,10 @@
-name: Release Plugins On Beta
+name: Release Plugins
 
 on:
   workflow_run:
     workflows: [ "Build Test" ]
     types: [ completed ]
     branches: [ main ]
-    paths:
-      - 'ssu-commerce-tools/**'
 
 jobs:
   build:
@@ -46,7 +44,7 @@ jobs:
 
       - name: Publish
         env:
-          VERSION: "beta-${{ steps.current-time.outputs.formattedTime }}.${{github.run_number}}"
+          VERSION: "${{ steps.current-time.outputs.formattedTime }}.${{github.run_number}}"
           USERNAME: ${{secrets.USERNAME}}
           TOKEN: ${{secrets.TOKEN}}
         run: ./gradlew publish -p ./ssu-commerce-tools
