@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     api("org.springframework.boot:spring-boot-starter-web")
-    api("com.ssu.commerce:vault:2023.07.2")
     // Security
     api("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.data:spring-data-commons")

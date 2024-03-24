@@ -45,6 +45,11 @@ allprojects {
         }
     }
 
+    dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        api("com.ssu.commerce:ssu-commerce-config-client:2024.03.1")
+    }
+
     configurations {
         compileOnly {
             extendsFrom(configurations.annotationProcessor.get())
