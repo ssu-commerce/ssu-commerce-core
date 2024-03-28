@@ -7,6 +7,8 @@ import com.ssu.commerce.plugins.util.nullWhenEmpty
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+var jvmExternalFlags: List<String> = emptyList()
+
 class DockerPublishPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.pluginManager.apply("com.google.cloud.tools.jib")
@@ -33,7 +35,7 @@ class DockerPublishPlugin : Plugin<Project> {
                     jvmFlags = listOf(
                         "-XX:+UseContainerSupport",
                         "-Dfile.encoding=UTF-8"
-                    )
+                    ) + jvmExternalFlags
                 }
             }
         }
