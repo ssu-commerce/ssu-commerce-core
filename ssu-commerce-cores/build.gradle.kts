@@ -47,7 +47,7 @@ allprojects {
 
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
-        api("com.ssu.commerce:ssu-commerce-config-client:2024.03.1")
+        api("com.ssu.commerce:ssu-commerce-config-client:2024.04.5")
     }
 
     configurations {

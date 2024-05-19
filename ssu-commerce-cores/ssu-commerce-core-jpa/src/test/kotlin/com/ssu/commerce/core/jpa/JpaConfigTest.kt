@@ -1,5 +1,7 @@
 package com.ssu.commerce.core.jpa
 
+import com.ssu.commerce.core.jpa.QTestEntity.testEntity
+import com.ssu.commerce.core.jpa.querydsl.QuerydslJPARepositorySupport
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +24,19 @@ data class TestEntity(
     constructor(name: String) : this(null, name)
 }
 
-interface TestEntityRepository : JpaRepository<TestEntity, Long>
+interface TestEntityRepository : JpaRepository<TestEntity, Long>, TestCustomRepository
+
+interface TestCustomRepository {
+    fun findByNameByQdsl(name: String): TestEntity?
+}
+
+class TestCustomRepositoryImpl : TestCustomRepository, QuerydslJPARepositorySupport(TestEntity::class.java) {
+    override fun findByNameByQdsl(name: String): TestEntity? =
+        queryFactory.select(testEntity)
+            .from(testEntity)
+            .where(testEntity.name.eq(name))
+            .fetchOne()
+}
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,6 +53,24 @@ internal class JpaConfigTest @Autowired constructor(val testRepository: TestEnti
             .get()
             .let {
                 assertThat(it.id).isNotNull
+                assertThat(it).returns("test name", TestEntity::name)
+                assertThat(it).returns("System", TestEntity::createdWho)
+                assertThat(it).returns("System", TestEntity::updatedWho)
+                assertThat(it.createdAt).isNotNull
+                assertThat(it.updatedAt).isNotNull
+            }
+    }
+
+    @Test
+    @Transactional
+    fun `queryDsl 동작 테스트`() {
+        // when
+        val savedEntity = testRepository.save(TestEntity("test name"))
+
+        // then
+        testRepository.findByNameByQdsl(savedEntity.name)
+            .let {
+                assertThat(it!!.id).isNotNull
                 assertThat(it).returns("test name", TestEntity::name)
                 assertThat(it).returns("System", TestEntity::createdWho)
                 assertThat(it).returns("System", TestEntity::updatedWho)
