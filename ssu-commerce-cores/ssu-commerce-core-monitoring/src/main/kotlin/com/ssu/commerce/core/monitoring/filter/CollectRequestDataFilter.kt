@@ -1,13 +1,8 @@
 package com.ssu.commerce.core.monitoring.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.ssu.commerce.core.monitoring.mdc.MDCStore.BODY
-import com.ssu.commerce.core.monitoring.mdc.MDCStore.HEADERS
-import com.ssu.commerce.core.monitoring.mdc.MDCStore.METHOD
-import com.ssu.commerce.core.monitoring.mdc.MDCStore.PARAMS
-import com.ssu.commerce.core.monitoring.mdc.MDCStore.URI
-import com.ssu.commerce.core.monitoring.mdc.MDCStore.requestMDC
 import org.slf4j.MDC
+import org.slf4j.spi.MDCAdapter
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -22,6 +17,15 @@ import javax.servlet.http.HttpServletRequest
 class CollectRequestDataFilter : Filter {
     private val objectMapper: ObjectMapper = ObjectMapper()
 
+    companion object {
+        val requestMDC: MDCAdapter = MDC.getMDCAdapter()
+        val METHOD: String = "REQUEST_METHOD"
+        val URI: String = "REQUEST_URI"
+        val HEADERS: String = "REQUEST_HEADER"
+        val PARAMS: String = "REQUEST_PARAMS"
+        val BODY: String = "REQUEST_BODY"
+    }
+
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         request as HttpServletRequest
@@ -34,7 +38,7 @@ class CollectRequestDataFilter : Filter {
             put(URI, request.requestURI)
             put(HEADERS, objectMapper.writeValueAsString(headers))
             put(PARAMS, objectMapper.writeValueAsString(parameters))
-            put(BODY, objectMapper.writeValueAsString(body))
+            put(BODY, objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(body))
         }
 
         try {
@@ -51,6 +55,8 @@ class CollectRequestDataFilter : Filter {
         return request.parameterMap
     }
 
-    private fun getBody(request: HttpServletRequest): String =
-        BufferedReader(InputStreamReader(request.inputStream)).lines().collect(Collectors.joining())
+    private fun getBody(request: HttpServletRequest): Any {
+        val body = BufferedReader(InputStreamReader(request.inputStream)).lines().collect(Collectors.joining())
+        return objectMapper.readValue(body, Any::class.java)
+    }
 }
