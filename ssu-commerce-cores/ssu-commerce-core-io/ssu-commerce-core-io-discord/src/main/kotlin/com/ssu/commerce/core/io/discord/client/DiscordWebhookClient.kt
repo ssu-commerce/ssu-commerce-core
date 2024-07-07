@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.multipart.MultipartFile
 
-@FeignClient("discord-webhook", url = "\${discord.webhook}")
+@FeignClient("discord-webhook", url = "\${discord.webhook:null}")
 interface DiscordWebhookClient {
     @PostMapping
     fun sendMessage(@RequestBody req: PostWebhookRequest)
@@ -39,3 +39,5 @@ data class Field(
 )
 
 val DISCORD_RED: String = "14177041"
+val DISCORD_YELLOW: String = "16705372"
+val DISCORD_GREY: String = "9807270"

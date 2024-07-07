@@ -6,12 +6,13 @@ import ch.qos.logback.classic.spi.ThrowableProxy
 import ch.qos.logback.core.UnsynchronizedAppenderBase
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ssu.commerce.core.io.discord.client.DISCORD_GREY
 import com.ssu.commerce.core.io.discord.client.DISCORD_RED
+import com.ssu.commerce.core.io.discord.client.DISCORD_YELLOW
 import com.ssu.commerce.core.io.discord.client.DiscordWebhookClient
 import com.ssu.commerce.core.io.discord.client.EmbedFields
 import com.ssu.commerce.core.io.discord.client.Field
 import com.ssu.commerce.core.io.discord.client.PostEmbedWebhookRequest
-import com.ssu.commerce.core.io.discord.client.PostWebhookRequest
 import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter.Companion.BODY
 import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter.Companion.HEADERS
 import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter.Companion.METHOD
@@ -19,6 +20,7 @@ import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter.Companio
 import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter.Companion.URI
 import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter.Companion.requestMDC
 import org.slf4j.MDC
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -29,12 +31,13 @@ import java.time.ZoneOffset.systemDefault
 import java.time.format.DateTimeFormatter
 
 class ReportAppender(
-    private val discordWebhookClient: DiscordWebhookClient
+    private val discordWebhookClient: DiscordWebhookClient,
+    @Value("\${monitoring.log.level}") private val level: String = "ERROR",
 ) : UnsynchronizedAppenderBase<ILoggingEvent>() {
     private val objectMapper: ObjectMapper = ObjectMapper()
 
     override fun append(event: ILoggingEvent) {
-        sendLog(event, Level.WARN)
+        sendLog(event, Level.valueOf(level))
         sendStackTrace(event)
     }
 
@@ -56,8 +59,26 @@ class ReportAppender(
             val pid = ProcessHandle.current().pid()
             val loggerName = event.loggerName
             val message = event.formattedMessage
-            discordWebhookClient.sendMessage(
-                PostWebhookRequest("$logTime $logLevel $pid --- [$threadName] $loggerName : $message")
+            discordWebhookClient.sendEmbedMessage(
+                PostEmbedWebhookRequest(
+                    listOf(
+                        EmbedFields(
+                            listOf(
+                                Field("LEVEL", "$logLevel", true),
+                                Field("TIME", logTime, true),
+                                Field("PID", "$pid", true),
+                                Field("THREAD", threadName, true),
+                                Field("LOGGER", loggerName),
+                                Field("MESSAGE", message),
+                            ),
+                            when (logLevel) {
+                                Level.ERROR -> DISCORD_RED
+                                Level.WARN -> DISCORD_YELLOW
+                                else -> DISCORD_GREY
+                            }
+                        )
+                    )
+                )
             )
         }
     }

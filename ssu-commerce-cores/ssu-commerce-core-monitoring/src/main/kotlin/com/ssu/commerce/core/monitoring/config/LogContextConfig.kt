@@ -7,18 +7,22 @@ import com.ssu.commerce.core.monitoring.filter.CollectRequestDataFilter
 import com.ssu.commerce.core.monitoring.filter.MultiReadableHttpServletRequestFilter
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 class LogContextConfig(
-    private val discordWebhookClient: DiscordWebhookClient
+    private val discordWebhookClient: DiscordWebhookClient,
 ) : InitializingBean {
+    @Value("\${monitoring.log.level:ERROR}")
+    lateinit var level: String
+
     override fun afterPropertiesSet() {
         val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
 
-        val reportAppender = ReportAppender(discordWebhookClient)
+        val reportAppender = ReportAppender(discordWebhookClient, level)
         reportAppender.context = loggerContext
         reportAppender.name = "reportAppender"
         reportAppender.start()
