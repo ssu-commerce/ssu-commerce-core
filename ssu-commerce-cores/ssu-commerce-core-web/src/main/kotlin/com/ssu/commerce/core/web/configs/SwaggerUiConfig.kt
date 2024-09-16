@@ -1,5 +1,7 @@
 package com.ssu.commerce.core.web.configs
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.servers.Server
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 
 @Component
+@OpenAPIDefinition(servers = [Server(url = "/")])
 @EnableConfigurationProperties
 class SwaggerUiConfig(
     @Value("\${springdoc.swagger-ui.base-package}") private val basePackage: String,
