@@ -57,6 +57,7 @@ class CollectRequestDataFilter : Filter {
 
     private fun getBody(request: HttpServletRequest): Any {
         val body = BufferedReader(InputStreamReader(request.inputStream)).lines().collect(Collectors.joining())
+        if (body.isEmpty()) return body
         return objectMapper.readValue(body, Any::class.java)
     }
 }
